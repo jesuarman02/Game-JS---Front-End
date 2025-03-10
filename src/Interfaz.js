@@ -158,7 +158,15 @@ btn_player2.addEventListener("click", () => {
   }
 });
 
+
+let turnoJugador1 = true;
+
 document.getElementById("btn_atk_py1").addEventListener("click", () => {
+
+  if (!turnoJugador1) {
+    return;
+  }
+
   if (player2.getVida() <= 0) {
     Swal.fire({
       title: "¡K.O.!",
@@ -215,9 +223,26 @@ document.getElementById("btn_atk_py1").addEventListener("click", () => {
     imageAlt: "Ataque básico",
     backdrop: `rgba(255, 215, 0, 0.5)`,
   });
+
+  turnoJugador1 = false;
+  document.getElementById("btn_atk_py1").disabled = true;
+  document.getElementById("btn_esp_py1").disabled = true;
+  document.getElementById("btn_ermi_py1").disabled = true;
+  document.getElementById("btn_ki_py1").disabled = true;
+
+  document.getElementById("btn_atk_py2").disabled = false;
+  document.getElementById("btn_esp_py2").disabled = false;
+  document.getElementById("btn_ermi_py2").disabled = false;
+  document.getElementById("btn_ki_py2").disabled = false;
+
 });
 
 document.getElementById("btn_esp_py1").addEventListener("click", () => {
+
+  if (!turnoJugador1) {
+    return;
+  }
+
   if (player2.getVida() <= 0) {
     Swal.fire({
       title: "¡K.O.!",
@@ -274,9 +299,24 @@ document.getElementById("btn_esp_py1").addEventListener("click", () => {
     imageAlt: "Ataque especial",
     backdrop: `rgba(255, 215, 0, 0.5)`,
   });
+  turnoJugador1 = false;
+  document.getElementById("btn_atk_py1").disabled = true;
+  document.getElementById("btn_esp_py1").disabled = true;
+  document.getElementById("btn_ermi_py1").disabled = true;
+  document.getElementById("btn_ki_py1").disabled = true;
+
+  document.getElementById("btn_atk_py2").disabled = false;
+  document.getElementById("btn_esp_py2").disabled = false;
+  document.getElementById("btn_ermi_py2").disabled = false;
+  document.getElementById("btn_ki_py2").disabled = false;
 });
 
 document.getElementById("btn_ermi_py1").addEventListener("click", () => {
+
+  if (!turnoJugador1) {
+    return;
+  }
+
   player1.semilla_ermi();
 
   let vida_actual = player1.getVida();
@@ -320,9 +360,22 @@ document.getElementById("btn_ermi_py1").addEventListener("click", () => {
     });
     document.getElementById("btn_ermi_py1").disabled = true;
   }
+  turnoJugador1 = false;
+  document.getElementById("btn_atk_py1").disabled = true;
+  document.getElementById("btn_esp_py1").disabled = true;
+  document.getElementById("btn_ermi_py1").disabled = true;
+  document.getElementById("btn_ki_py1").disabled = true;
+
+  document.getElementById("btn_atk_py2").disabled = false;
+  document.getElementById("btn_esp_py2").disabled = false;
+  document.getElementById("btn_ermi_py2").disabled = false;
+  document.getElementById("btn_ki_py2").disabled = false;
 });
 
 document.getElementById("btn_ki_py1").addEventListener("click", () => {
+  if (!turnoJugador1) {
+    return; 
+  }
   if (player1.getKi() >= 80) {
     Swal.fire({
       title: "¡Ki al Máximo!",
@@ -348,4 +401,263 @@ document.getElementById("btn_ki_py1").addEventListener("click", () => {
     imageAlt: "Ataque especial",
     backdrop: `rgba(255, 215, 0, 0.5)`,
   });
+  turnoJugador1 = false;
+  document.getElementById("btn_atk_py1").disabled = true;
+  document.getElementById("btn_esp_py1").disabled = true;
+  document.getElementById("btn_ermi_py1").disabled = true;
+  document.getElementById("btn_ki_py1").disabled = true;
+
+  document.getElementById("btn_atk_py2").disabled = false;
+  document.getElementById("btn_esp_py2").disabled = false;
+  document.getElementById("btn_ermi_py2").disabled = false;
+  document.getElementById("btn_ki_py2").disabled = false;
+});
+
+document.getElementById("btn_atk_py2").addEventListener("click", () => {
+
+  if (turnoJugador1) {
+    return; 
+  }
+  if (player1.getVida() <= 0) {
+    Swal.fire({
+      title: "¡K.O.!",
+      text: "El Jugador 2 ha sido derrotado. No puedes seguir atacando.",
+      icon: "error",
+      backdrop: `rgba(255, 0, 0, 0.5)`,
+    });
+    return;
+  }
+
+  if (player2.getEnergia() <= 0) {
+    Swal.fire({
+      title: "¡Energía Agotada!",
+      text: "No puedes atacar, recarga tu energía.",
+      icon: "error",
+      backdrop: `rgba(255, 215, 0, 0.5)`,
+    });
+    return;
+  }
+
+  if (player2.getKi() <= 0) {
+    Swal.fire({
+      title: "¡Ki Agotado!",
+      text: "No puedes atacar, tu ki se ha agotado.",
+      icon: "error",
+      backdrop: `rgba(255, 215, 0, 0.5)`,
+    });
+    return;
+  }
+
+  player2.atk_basico(player1);
+  let porcentaje = parseInt((parseInt(player2.getKi()) * 100) / 80);
+  document.getElementById("ki_py2").style.width = `${porcentaje}%`;
+  document.getElementById("ki_py2").innerText = `${porcentaje}%`;
+
+  porcentaje = parseInt((parseInt(player2.getEnergia()) * 100) / 90);
+  document.getElementById("energia_py2").style.width = `${porcentaje}%`;
+  document.getElementById("energia_py2").innerText = `${porcentaje}%`;
+
+  porcentaje = parseInt((parseInt(player1.getVida()) * 100) / 100);
+  porcentaje = porcentaje < 0 ? 0 : porcentaje;
+  document.getElementById("vida_py1").style.width = `${porcentaje}%`;
+  document.getElementById("vida_py1").innerText = `${porcentaje}%`;
+
+  Swal.fire({
+    title: "Ki no Tsurugi",
+    text: "AHHHH! GOKUUUUUUUUUU",
+    width: 600,
+    color: "#ffffff",
+    background: "linear-gradient(135deg, #FFD700, #FFA500, #FF4500)",
+    imageUrl: `./public/img/${pj2}/basico.png`,
+    imageWidth: 300,
+    imageHeight: 300,
+    imageAlt: "Ataque básico",
+    backdrop: `rgba(255, 215, 0, 0.5)`,
+  });
+  turnoJugador1 = true;
+  document.getElementById("btn_atk_py2").disabled = true;
+  document.getElementById("btn_esp_py2").disabled = true;
+  document.getElementById("btn_ermi_py2").disabled = true;
+  document.getElementById("btn_ki_py2").disabled = true;
+
+  document.getElementById("btn_atk_py1").disabled = false;
+  document.getElementById("btn_esp_py1").disabled = false;
+  document.getElementById("btn_ermi_py1").disabled = false;
+  document.getElementById("btn_ki_py1").disabled = false;
+
+});
+
+document.getElementById("btn_esp_py2").addEventListener("click", () => {
+
+  if (turnoJugador1) {
+    return; 
+  }
+  if (player1.getVida() <= 0) {
+    Swal.fire({
+      title: "¡K.O.!",
+      text: "El Jugador 2 ha sido derrotado. No puedes seguir atacando.",
+      icon: "error",
+      backdrop: `rgba(255, 0, 0, 0.5)`,
+    });
+    return;
+  }
+
+  if (player2.getEnergia() <= 0) {
+    Swal.fire({
+      title: "¡Energía Agotada!",
+      text: "No puedes atacar, recarga tu energía.",
+      icon: "error",
+      backdrop: `rgba(255, 215, 0, 0.5)`,
+    });
+    return;
+  }
+
+  if (player2.getKi() <= 0) {
+    Swal.fire({
+      title: "¡Ki Agotado!",
+      text: "No puedes atacar, tu ki se ha agotado.",
+      icon: "error",
+      backdrop: `rgba(255, 215, 0, 0.5)`,
+    });
+    return;
+  }
+
+  player2.atk_especial(player1);
+  let porcentaje = parseInt((parseInt(player2.getKi()) * 100) / 80);
+  document.getElementById("ki_py2").style.width = `${porcentaje}%`;
+  document.getElementById("ki_py2").innerText = `${porcentaje}%`;
+
+  porcentaje = parseInt((parseInt(player2.getEnergia()) * 100) / 90);
+  document.getElementById("energia_py2").style.width = `${porcentaje}%`;
+  document.getElementById("energia_py2").innerText = `${porcentaje}%`;
+
+  porcentaje = parseInt((parseInt(player1.getVida()) * 100) / 100);
+  porcentaje = porcentaje < 0 ? 0 : porcentaje;
+  document.getElementById("vida_py1").style.width = `${porcentaje}%`;
+  document.getElementById("vida_py1").innerText = `${porcentaje}%`;
+
+  Swal.fire({
+    title: "Ataque del Big Bang",
+    text: "¡Golpe definitivo!",
+    width: 600,
+    color: "#ffffff",
+    background: "linear-gradient(135deg, #FFD700, #FFA500, #FF4500)",
+    imageUrl: `./public/img/${pj2}/especial.png`,
+    imageWidth: 300,
+    imageHeight: 300,
+    imageAlt: "Ataque especial",
+    backdrop: `rgba(255, 215, 0, 0.5)`,
+  });
+
+  turnoJugador1 = true;
+  document.getElementById("btn_atk_py2").disabled = true;
+  document.getElementById("btn_esp_py2").disabled = true;
+  document.getElementById("btn_ermi_py2").disabled = true;
+  document.getElementById("btn_ki_py2").disabled = true;
+
+  document.getElementById("btn_atk_py1").disabled = false;
+  document.getElementById("btn_esp_py1").disabled = false;
+  document.getElementById("btn_ermi_py1").disabled = false;
+  document.getElementById("btn_ki_py1").disabled = false;
+
+});
+
+document.getElementById("btn_ermi_py2").addEventListener("click", () => {
+  if (turnoJugador1) {
+    return; 
+  }
+  player2.semilla_ermi();
+
+  let vida_actual = player2.getVida();
+  let porcentaje = parseInt((vida_actual * 100) / 100);
+  document.getElementById("vida_py2").style.width = `${porcentaje}%`;
+  document.getElementById("vida_py2").innerText = `${porcentaje}%`;
+
+  let ki_actual = player2.getKi();
+  porcentaje = parseInt((ki_actual * 100) / 80);
+  document.getElementById("ki_py2").style.width = `${porcentaje}%`;
+  document.getElementById("ki_py2").innerText = `${porcentaje}%`;
+
+  let energia_actual = player2.getEnergia();
+  porcentaje = parseInt((energia_actual * 100) / 90);
+  document.getElementById("energia_py2").style.width = `${porcentaje}%`;
+  document.getElementById("energia_py2").innerText = `${porcentaje}%`;
+
+  let semillas_actuales = player2.getSemilla();
+  semillas_actuales = semillas_actuales < 0 ? 0 : semillas_actuales;
+  document.getElementById("semillas_py2").innerText = `${semillas_actuales}`;
+
+  Swal.fire({
+    title: "Semilla del Ermitaño",
+    text: "¡Tu energía ha sido restaurada!",
+    width: 600,
+    color: "#ffffff",
+    background: "linear-gradient(135deg, #32CD32, #008000, #004d00)",
+    imageUrl: `./public/img/${pj2}/curar.png`,
+    imageWidth: 300,
+    imageHeight: 300,
+    imageAlt: "Recuperación con semilla del ermitaño",
+    backdrop: `rgba(50, 205, 50, 0.5)`,
+  });
+
+  if (player2.getSemilla() <= 0) {
+    Swal.fire({
+      title: "¡Semillas Agotadas!",
+      text: "Has agotado todas tus semillas del ermitaño.",
+      icon: "error",
+      backdrop: `rgba(50, 205, 50, 0.5)`,
+    });
+    document.getElementById("btn_ermi_py2").disabled = true;
+  }
+  turnoJugador1 = true;
+  document.getElementById("btn_atk_py2").disabled = true;
+  document.getElementById("btn_esp_py2").disabled = true;
+  document.getElementById("btn_ermi_py2").disabled = true;
+  document.getElementById("btn_ki_py2").disabled = true;
+
+  document.getElementById("btn_atk_py1").disabled = false;
+  document.getElementById("btn_esp_py1").disabled = false;
+  document.getElementById("btn_ermi_py1").disabled = false;
+  document.getElementById("btn_ki_py1").disabled = false;
+});
+
+document.getElementById("btn_ki_py2").addEventListener("click", () => {
+  if (turnoJugador1) {
+    return;
+  }
+  if (player2.getKi() >= 80) {
+    Swal.fire({
+      title: "¡Ki al Máximo!",
+      text: "Tu ki ya está al 100%, no puedes cargar más. Es momento de Atacar!!",
+      icon: "warning",
+      backdrop: `rgba(255, 215, 0, 0.5)`,
+    });
+    return;
+  }
+  player2.aumentar_ki();
+  let porcentaje = parseInt((parseInt(player2.getKi()) * 100) / 80);
+  document.getElementById("ki_py2").style.width = `${porcentaje}%`;
+  document.getElementById("ki_py2").innerText = `${porcentaje}%`;
+  Swal.fire({
+    title: "Kaiokeeen",
+    text: "Kaiokeeeeeeeeeeeeeeeeeeeeen",
+    width: 600,
+    color: "#ffffff",
+    background: "linear-gradient(135deg, #FFD700, #FFA500, #FF4500)",
+    imageUrl: `./public/img/${pj2}/energia.png`,
+    imageWidth: 300,
+    imageHeight: 300,
+    imageAlt: "Ataque especial",
+    backdrop: `rgba(255, 215, 0, 0.5)`,
+  });
+  turnoJugador1 = true;
+  document.getElementById("btn_atk_py2").disabled = true;
+  document.getElementById("btn_esp_py2").disabled = true;
+  document.getElementById("btn_ermi_py2").disabled = true;
+  document.getElementById("btn_ki_py2").disabled = true;
+
+  document.getElementById("btn_atk_py1").disabled = false;
+  document.getElementById("btn_esp_py1").disabled = false;
+  document.getElementById("btn_ermi_py1").disabled = false;
+  document.getElementById("btn_ki_py1").disabled = false;
 });
